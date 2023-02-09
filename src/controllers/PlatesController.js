@@ -24,6 +24,48 @@ class PlatesController {
     return response.status(201).json()
   }
 
+  async update(request, response) {
+    const { title, description, price, category, ingredients } = request.body
+    const { plate_id } = request.params
+
+    const plate = await knex('plates').where({ id: plate_id }).first()
+    const plateIngredients = await knex('plates-ingredients')
+      .where('plate_id', plate_id)
+
+    if(!plate) {
+      throw new AppError('Prato não encontrado!', 406)
+    }
+
+    plate.title = title ?? plate.title
+    plate.description = description ?? plate.description
+    plate.price = price ?? plate.price
+    plate.category = category ?? plate.category
+
+    const ingredientsUpdate = ingredients.map(ingredient => {
+      return {
+        plate_id,
+        name: ingredient
+      }
+    })
+
+    await knex('plates-ingredients')
+      .where('plate_id', plate_id)
+      .delete()
+    
+    await knex('plates').where({ id: plate_id }).update({
+      title: plate.title,
+      description: plate.description,
+      price: plate.price,
+      category: plate.category
+    })
+
+    await knex('plates-ingredients')
+      .insert(ingredientsUpdate)
+
+
+    return response.status(200).json({ ...plate, ingredientsUpdate })
+  }
+
   async show(request, response) {
     const { id } = request.params
 

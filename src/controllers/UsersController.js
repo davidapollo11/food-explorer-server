@@ -38,7 +38,6 @@ class UsersController {
     const { id } = request.params
     
     const user = await knex('users').where({ id }).first()
-    console.log(id, user)
 
     if(!user) {
       throw new AppError('Não é possível atualizar!')
