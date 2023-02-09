@@ -26,12 +26,12 @@ class FavoritesController {
     const favoritePlateIdsForUser = await knex('favorites-plates')
       .select('plate_id')
       .where({ user_id })
-      .orderBy('plate_id');
+      .orderBy('plate_id')
 
     const plates = await knex('plates')
-      .whereIn('id', favoritePlateIdsForUser.map(fav => fav.plate_id));
+      .whereIn('id', favoritePlateIdsForUser.map(fav => fav.plate_id))
 
-    const allIngredients = await knex('plates-ingredients');
+    const allIngredients = await knex('plates-ingredients')
 
     const favoritesPlatesWithIngredients = plates.map(plate => {
       const ingredients = allIngredients.filter(ingredient => ingredient.plate_id === plate.id);
@@ -39,10 +39,10 @@ class FavoritesController {
       return {
         ...plate,
         ingredients,
-      };
-    });
+      }
+    })
 
-    return response.json(favoritesPlatesWithIngredients);
+    return response.json(favoritesPlatesWithIngredients)
   }
 
 }

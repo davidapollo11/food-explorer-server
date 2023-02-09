@@ -12,14 +12,14 @@ class PlatesController {
       category
     })
 
-    const tagsInsert = ingredients.map(ingredient => {
+    const ingredientsInsert = ingredients.map(ingredient => {
       return {
         plate_id,
         name: ingredient
       }
     })
 
-    await knex('plates-ingredients').insert(tagsInsert)
+    await knex('plates-ingredients').insert(ingredientsInsert)
 
     return response.status(201).json()
   }
