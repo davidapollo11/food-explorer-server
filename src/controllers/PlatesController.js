@@ -4,7 +4,7 @@ const knex = require('../database/knex')
 class PlatesController {
   async create(request, response) {
     const { title, description, price, category, ingredients } = request.body
-    const { user_id } = request.params
+    const user_id = request.user.id
 
     const fetchUser = await knex('users').where({ id: user_id })
     const [ user ] = fetchUser

@@ -21,9 +21,9 @@ class UsersController {
 
   async update(request, response) {
     const { name, email, old_password, password, is_admin } = request.body
-    const { id } = request.params
+    const user_id = request.user.id
 
-    const fetchUser = await knex('users').where({ id })
+    const fetchUser = await knex('users').where({ id: user_id })
     const [ user ] = fetchUser
 
     if(!user) {
@@ -55,7 +55,7 @@ class UsersController {
       user.password = await hash(password, 8)
     }
 
-    await knex('users').where({ id }).update({ ...user })
+    await knex('users').where({ id: user_id }).update({ ...user })
 
     return response.status(200).json()
   }

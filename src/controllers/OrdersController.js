@@ -4,14 +4,14 @@ const AppError = require('../utils/AppError')
 class OrdersController {
   async create(request, response) {
     const { details, total_price, status } = request.body
-    const { id } = request.params
+    const user_id = request.user.id
 
     if(!details || !total_price || !status) {
       throw new AppError('Preencha todas as informações!')
     }
 
     await knex('order-history').insert({
-      user_id: id,
+      user_id,
       status,
       details,
       total_price
